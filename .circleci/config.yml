@@ -44,8 +44,6 @@ jobs:
           paths:
             - ./node_modules
   test:
-    docker:
-      - image: circleci/node:10.16.3
     steps:
       - run: npm run test
   deploy:
