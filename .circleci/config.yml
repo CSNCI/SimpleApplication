@@ -50,8 +50,7 @@ jobs:
     docker:
       - image: circleci/node:10.16.3
     steps:
-      - checkout
-      - run: echo "this is the test job"
+      - run: npm run test
   deploy:
     docker:
       - image: circleci/node:10.16.3
