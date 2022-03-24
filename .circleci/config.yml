@@ -46,6 +46,15 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json"}}
           paths:
             - ./node_modules
+  test:
+    docker:
+      - image: cimg/<language>:<version TAG>
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    steps:
+      - checkout
+      - run: echo "this is the test job"
   deploy:
     docker:
       - image: circleci/node:10.16.3
