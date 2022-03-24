@@ -9,13 +9,20 @@ workflows:
           branches:
             only:
              - main
-    - deploy:
+    - test:
         filters:
           branches:
             only:
              - main
         requires:
           - build
+    - deploy:
+        filters:
+          branches:
+            only:
+             - main
+        requires:
+          - test
 
 jobs:
   build:
@@ -32,6 +39,9 @@ jobs:
       - run:
           name: install-npm
           command: npm install
+      - run:
+          name: test-npm
+          command: npm run test
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json"}}
           paths:
