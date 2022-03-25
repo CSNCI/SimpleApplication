@@ -9,13 +9,20 @@ workflows:
           branches:
             only:
              - main
-    - deploy:
+    - test:
         filters:
           branches:
             only:
              - main
         requires:
           - build
+    - deploy:
+        filters:
+          branches:
+            only:
+             - main
+        requires:
+          - test
 
 jobs:
   build:
@@ -36,6 +43,23 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json"}}
           paths:
             - ./node_modules
+  test:
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: |
+            npm install --save
+      - run:
+          name: Run Unit Tests
+          command: |
+            ./node_modules/mocha/bin/mocha test/ --reporter mochawesome --reporter-options reportDir=test-results,reportFilename=test-results
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
   deploy:
     docker:
       - image: circleci/node:10.16.3
